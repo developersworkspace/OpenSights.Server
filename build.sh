@@ -9,3 +9,4 @@ cd ./OpenSights.Server/api
 npm install
 gulp build
 cd ./../
+docker-compose up
