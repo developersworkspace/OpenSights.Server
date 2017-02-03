@@ -6,7 +6,7 @@ let express = require('express');
 let router = express.Router();
 
 router.post('/save', (req: Request, res: Response, next: Function) => {
-    saveToDatastore(req.body);
+    saveToDatastore(req, req.body);
     res.send('OK');
 });
 
@@ -19,7 +19,12 @@ router.post('/get', (req: Request, res: Response, next: Function) => {
     select(res, req.body);
 });
 
-function saveToDatastore(obj) {
+function saveToDatastore(req: Request, obj) {
+
+
+    obj['timestamp'] = getUTCSeconds();
+    obj['ipAddress'] = req.ip;
+
     let mongoClient = new mongodb.MongoClient();
     mongoClient.connect('mongodb://mongo:27017/opensights', (err: Error, db: mongodb.Db) => {
         if (err) {
@@ -45,7 +50,13 @@ function select(res: Response, query: any) {
                 { $match: {} }
                 , {
                     $group:
-                    { _id: query, list: { $push: '$$ROOT' } }
+                    {
+                        _id: query,
+                        list: {
+                            $push: '$$ROOT'
+                        },
+                        count: { $sum: 1 }
+                    }
                 }
             ]).toArray((err: Error, results: any) => {
                 res.json(results);
@@ -53,6 +64,13 @@ function select(res: Response, query: any) {
             });
         }
     });
+}
+
+function getUTCSeconds() {
+    var currentTime = new Date()
+    var UTCseconds = (currentTime.getTime() + currentTime.getTimezoneOffset() * 60 * 1000) / 1000;
+
+    return UTCseconds;
 }
 
 export = router;
