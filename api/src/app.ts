@@ -1,6 +1,8 @@
 // Imports
 import express = require("express");
 import bodyParser = require("body-parser");
+import * as https from 'https';
+import * as fs from 'fs';
 
 // Import Routes
 import * as dataRouter from './routes/data';
@@ -10,7 +12,7 @@ import { CORS } from './middleware/common';
 
 export class WebApi {
 
-    constructor(private app: express.Express, private port: number) {
+    constructor(private app: express.Express, private httpPort: number, private httpsPort: number) {
         this.configureMiddleware(app);
         this.configureRoutes(app);
     }
@@ -26,12 +28,20 @@ export class WebApi {
     }
 
     public run() {
-        this.app.listen(this.port);
+        https.createServer({
+            key: fs.readFileSync(__dirname + '/domain.key'),
+            cert: fs.readFileSync(__dirname + '/chained.pem')
+        }, this.app).listen(this.httpsPort);
+
+        https.createServer({
+
+        }, this.app).listen(this.httpPort);
     }
 }
 
 
-let port = 3000;
-let api = new WebApi(express(), port);
+let httpPort = 3000;
+let httpsPort = 3005;
+let api = new WebApi(express(), httpPort, httpsPort);
 api.run();
-console.info(`Listening on ${port}`);
+console.info(`Listening on ${httpPort} and ${httpsPort}`);
