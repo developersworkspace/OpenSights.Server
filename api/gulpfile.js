@@ -22,12 +22,17 @@ gulp.task('clean', function () {
         .pipe(clean())
 });
 
-// Copies 'package.json' file to build directory
+// Copies files to build directory
 gulp.task('build1', ['clean'], function () {
     return gulp
-        .src('./package.json')
+        .src([
+            './package.json',
+            './src/**/*.key',
+            './src/**/*.pem'
+        ])
         .pipe(gulp.dest('./dist'));
 });
+
 
 
 // Compile typescript files
