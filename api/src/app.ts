@@ -12,7 +12,7 @@ import { CORS } from './middleware/common';
 
 export class WebApi {
 
-    constructor(private app: express.Express, private httpPort: number, private httpsPort: number) {
+    constructor(private app: express.Express, private httpsPort: number) {
         this.configureMiddleware(app);
         this.configureRoutes(app);
     }
@@ -32,16 +32,10 @@ export class WebApi {
             key: fs.readFileSync(__dirname + '/domain.key'),
             cert: fs.readFileSync(__dirname + '/chained.pem')
         }, this.app).listen(this.httpsPort);
-
-        https.createServer({
-
-        }, this.app).listen(this.httpPort);
     }
 }
 
-
-let httpPort = 3000;
 let httpsPort = 3005;
-let api = new WebApi(express(), httpPort, httpsPort);
+let api = new WebApi(express(), httpsPort);
 api.run();
-console.info(`Listening on ${httpPort} and ${httpsPort}`);
+console.info(`Listening on ${httpsPort}`);
