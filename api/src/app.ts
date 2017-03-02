@@ -35,7 +35,7 @@ export class WebApi {
     }
 }
 
-let httpsPort = 3005;
+let httpsPort = 3000;
 let api = new WebApi(express(), httpsPort);
 api.run();
 console.info(`Listening on ${httpsPort}`);

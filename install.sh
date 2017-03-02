@@ -45,7 +45,7 @@ sudo apt-get install -y nginx
 sudo ufw allow 'Nginx HTTP'
 
 # Download nginx.conf to NGINX directory
-sudo curl -o /etc/nginx/nginx.conf https://raw.githubusercontent.com/developersworkspace/WorldOfRations/master/nginx.conf
+sudo curl -o /etc/nginx/nginx.conf https://raw.githubusercontent.com/developersworkspace/OpenSights.Server/master/nginx.conf
 
 # Restart NGINX
 sudo systemctl restart nginx
