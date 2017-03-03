@@ -10,9 +10,12 @@ import * as dataRouter from './routes/data';
 // Import middleware
 import { CORS } from './middleware/common';
 
+// Imports logger
+import { logger } from './logger';
+
 export class WebApi {
 
-    constructor(private app: express.Express, private httpsPort: number) {
+    constructor(private app: express.Express, private port: number) {
         this.configureMiddleware(app);
         this.configureRoutes(app);
     }
@@ -28,14 +31,11 @@ export class WebApi {
     }
 
     public run() {
-        https.createServer({
-            key: fs.readFileSync(__dirname + '/domain.key'),
-            cert: fs.readFileSync(__dirname + '/chained.pem')
-        }, this.app).listen(this.httpsPort);
+         this.app.listen(this.port);
     }
 }
 
-let httpsPort = 3000;
-let api = new WebApi(express(), httpsPort);
+let port = 3000;
+let api = new WebApi(express(), port);
 api.run();
-console.info(`Listening on ${httpsPort}`);
+logger.info(`Listening on ${port}`);

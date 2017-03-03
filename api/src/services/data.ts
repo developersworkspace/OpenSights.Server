@@ -2,15 +2,16 @@
 import { Express, Request, Response } from "express";
 import * as mongodb from 'mongodb';
 
+// Imports configuration
+import { config } from './../config';
+
 export class DataService {
 
-
-
-    save(req: Request, obj): Promise<Boolean> {
+    public save(req: Request, obj): Promise<Boolean> {
         obj['timestamp'] = this.getUTCSeconds();
         obj['ipAddress'] = req.ip;
         let mongoClient = new mongodb.MongoClient();
-        return mongoClient.connect('mongodb://mongo:27017/opensights').then((db: mongodb.Db) => {
+        return mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
             var collection = db.collection('snapshots');
             return collection.insertOne(obj);
         }).then((result) => {
@@ -18,9 +19,9 @@ export class DataService {
         });
     }
 
-    query(query: any): Promise<any[]> {
+    public query(query: any): Promise<any[]> {
         let mongoClient = new mongodb.MongoClient();
-        return mongoClient.connect('mongodb://mongo:27017/opensights').then((db: mongodb.Db) => {
+        return mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
             var collection = db.collection('snapshots');
             return collection.aggregate([
                 { $match: {} }
