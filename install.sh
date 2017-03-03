@@ -25,7 +25,7 @@ cd ./OpenSights.Server/api
 npm install
 
 # Build 'api'
-gulp build
+npm run build
 
 # Change to root of repository
 cd ./../
@@ -38,11 +38,14 @@ docker-compose up
 # Update machine package indexes
 sudo apt-get update
 
+# Open 443 port
+sudo ufw allow 443/tcp
+
 # Install Let's Encrypt cli
 sudo apt-get install -y letsencrypt
 
 # Obtain SSL CERT
-sudo letsencrypt certonly --standalone --email developersworkspace@gmail.com -d opensight.developersworkspace.co.za
+sudo letsencrypt certonly --agree-tos --standalone --email developersworkspace@gmail.com -d opensights.developersworkspace.co.za
 
 # -- INSTALL NGINX --
 
