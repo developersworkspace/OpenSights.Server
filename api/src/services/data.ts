@@ -7,11 +7,15 @@ import { config } from './../config';
 
 export class DataService {
 
-    public save(req: Request, obj): Promise<Boolean> {
+    constructor(private mongoClient: mongodb.MongoClient) {
+
+    }
+
+    public save(ipAddress: string, obj): Promise<Boolean> {
         obj['timestamp'] = this.getUTCSeconds();
-        obj['ipAddress'] = req.ip;
-        let mongoClient = new mongodb.MongoClient();
-        return mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
+        obj['ipAddress'] = ipAddress;
+
+        return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
             var collection = db.collection('snapshots');
             return collection.insertOne(obj);
         }).then((result) => {
@@ -20,8 +24,7 @@ export class DataService {
     }
 
     public query(query: any): Promise<any[]> {
-        let mongoClient = new mongodb.MongoClient();
-        return mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
+        return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
             var collection = db.collection('snapshots');
             return collection.aggregate([
                 { $match: {} }

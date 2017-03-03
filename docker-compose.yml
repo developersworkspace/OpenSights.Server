@@ -6,5 +6,9 @@ services:
         - "3000:3000"
         links: 
         - mongo
+        volumes:
+        - /logs:/logs
     mongo:
         image: "mongo"
+        volumes:
+        - /docker/mongodb:/var/lib/mongodb
