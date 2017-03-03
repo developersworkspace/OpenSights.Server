@@ -31,7 +31,7 @@ npm run build
 cd ./../
 
 # Build and run docker compose as deamon
-docker-compose up
+docker-compose up -d
 
 # -- INSTALL SSL CERT
 
