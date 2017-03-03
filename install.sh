@@ -33,7 +33,7 @@ cd ./../
 # Build and run docker compose as deamon
 docker-compose up -d
 
-# -- INSTALL SSL CERT
+# -- INSTALL SSL CERT --
 
 # Update machine package indexes
 sudo apt-get update
