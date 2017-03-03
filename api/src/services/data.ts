@@ -17,8 +17,11 @@ export class DataService {
 
         return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
             var collection = db.collection('snapshots');
-            return collection.insertOne(obj);
-        }).then((result) => {
+            return collection.insertOne(obj).then((result: any) => {
+                db.close();
+                return result;
+            });
+        }).then((result: any) => {
             return true;
         });
     }
@@ -38,7 +41,10 @@ export class DataService {
                         count: { $sum: 1 }
                     }
                 }
-            ]).toArray();
+            ]).toArray().then((result: any[]) => {
+                db.close();
+                return result;
+            });
         });
     }
 
