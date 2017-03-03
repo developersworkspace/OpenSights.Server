@@ -17,11 +17,7 @@ router.post('/save', (req: Request, res: Response, next: Function) => {
     });    
 });
 
-/*
-    {
-        "userAgent": "$userAgent"
-    }
-*/
+
 router.post('/get', (req: Request, res: Response, next: Function) => {
 
     let dataService = new DataService(mongodb.MongoClient);

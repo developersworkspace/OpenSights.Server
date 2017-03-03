@@ -29,6 +29,7 @@ export class DataService {
     public query(query: any): Promise<any[]> {
         return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
             var collection = db.collection('snapshots');
+
             return collection.aggregate([
                 { $match: {} }
                 , {
@@ -38,6 +39,26 @@ export class DataService {
                         list: {
                             $push: '$$ROOT'
                         },
+                        count: { $sum: 1 }
+                    }
+                }
+            ]).toArray().then((result: any[]) => {
+                db.close();
+                return result;
+            });
+        });
+    }
+
+    public statsQuery( match: any,query: any): Promise<any[]> {
+        return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
+            var collection = db.collection('snapshots');
+
+            return collection.aggregate([
+                { $match: {} }
+                , {
+                    $group:
+                    {
+                        _id: query,
                         count: { $sum: 1 }
                     }
                 }

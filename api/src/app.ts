@@ -7,6 +7,7 @@ import expressWinston = require('express-winston');
 
 // Import Routes
 import * as dataRouter from './routes/data';
+import * as insightsRouter from './routes/insights';
 
 // Import middleware
 import * as cors from 'cors';
@@ -34,6 +35,7 @@ export class WebApi {
 
     private configureRoutes(app: express.Express) {
         app.use("/api/data", dataRouter);
+        app.use("/api/insights", insightsRouter);
     }
 
     public run() {
