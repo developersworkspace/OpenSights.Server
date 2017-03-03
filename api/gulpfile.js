@@ -2,6 +2,7 @@
 var gulp = require('gulp');
 var clean = require('gulp-clean');
 var ts = require('gulp-typescript');
+var rename = require("gulp-rename");
 var sequence = require('run-sequence');
 
 // Compiles typescript files
@@ -48,11 +49,18 @@ gulp.task('compile:ts.prod', function () {
         .pipe(gulp.dest('./dist'));
 });
 
+// Renames config file
+gulp.task('rename:config', function () {
+    return gulp.src('./dist/config.prod.js', { base: process.cwd() })
+        .pipe(rename('config.js'))
+        .pipe(gulp.dest('./dist'));
+});
+
 
 gulp.task('build:dev', function (done) {
     sequence('clean:js', 'compile:ts.dev', done);
 });
 
 gulp.task('build:prod', function (done) {
-    sequence('clean:dist', 'compile:ts.prod', 'copy:package.json', done);
+    sequence('clean:dist', 'compile:ts.prod', 'copy:package.json', 'rename:config', done);
 });
