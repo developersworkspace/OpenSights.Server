@@ -33,6 +33,17 @@ cd ./../
 # Build and run docker compose as deamon
 docker-compose up
 
+# -- INSTALL SSL CERT
+
+# Update machine package indexes
+sudo apt-get update
+
+# Install Let's Encrypt cli
+sudo apt-get install -y letsencrypt
+
+# Obtain SSL CERT
+sudo letsencrypt certonly --standalone --email developersworkspace@gmail.com -d opensight.developersworkspace.co.za
+
 # -- INSTALL NGINX --
 
 # Update machine package indexes
