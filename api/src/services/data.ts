@@ -49,7 +49,27 @@ export class DataService {
         });
     }
 
-    public statsQuery( match: any,query: any): Promise<any[]> {
+    public listHosts() {
+        return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
+            var collection = db.collection('snapshots');
+
+            return collection.aggregate([
+                { $match: {} }
+                , {
+                    "$group": {
+                        "_id": {
+                            "host": "$host"
+                        }
+                    }
+                }
+            ]).toArray().then((result: any[]) => {
+                db.close();
+                return result.map(x => x._id.host).filter(x => x != null && x != '');
+            });
+        });
+    }
+
+    public statsQuery(match: any, query: any): Promise<any[]> {
         return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
             var collection = db.collection('snapshots');
 

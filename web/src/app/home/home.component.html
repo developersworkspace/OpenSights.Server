@@ -1,0 +1,19 @@
+<header class="jumbotron hero-spacer">
+  <h1>Welcome to OpenSights</h1>
+  <!--<p>Visualize the latest trends recommended by the community.</p>-->
+</header>
+<hr>
+<div class="row">
+  <div class="col-lg-12">
+    <h3>Hosts</h3>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-8">
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let item of viewModel.hosts">
+        <a href="/dashboard/{{item}}">{{item}}</a>
+      </li>
+    </ul>
+  </div>
+</div>

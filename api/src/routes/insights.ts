@@ -18,8 +18,22 @@ router.get('/groupbyuseragent', (req: Request, res: Response, next: Function) =>
         {
             "userAgent": "$userAgent"
         }).then((result: any[]) => {
-            res.json(result);
+            res.json(result.map(x => {
+                return {
+                    key: x._id.userAgent,
+                    value: x.count
+                }
+            }));
         });
+});
+
+router.get('/hosts', (req: Request, res: Response, next: Function) => {
+
+    let dataService = new DataService(mongodb.MongoClient);
+
+    dataService.listHosts().then((result: any[]) => {
+        res.json(result);
+    });
 });
 
 export = router;
