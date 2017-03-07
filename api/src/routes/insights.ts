@@ -2,6 +2,7 @@
 import { Express, Request, Response } from "express";
 let express = require('express');
 import * as mongodb from 'mongodb';
+let useragent = require('useragent');
 
 // Imports services
 import { DataService } from './../services/data';
@@ -20,7 +21,7 @@ router.get('/groupbyuseragent', (req: Request, res: Response, next: Function) =>
         }).then((result: any[]) => {
             res.json(result.map(x => {
                 return {
-                    key: x._id.userAgent,
+                    key: identifyBrowser(x._id.userAgent),
                     value: x.count
                 }
             }));
@@ -54,5 +55,12 @@ router.get('/hosts', (req: Request, res: Response, next: Function) => {
         res.json(result);
     });
 });
+
+function identifyBrowser(userAgent) {
+    let agent = useragent.parse(userAgent);
+
+    return agent.toAgent();
+}
+
 
 export = router;

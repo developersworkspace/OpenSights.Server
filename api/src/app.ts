@@ -15,6 +15,9 @@ import * as cors from 'cors';
 // Imports logger
 import { logger } from './logger';
 
+// Imports configuration
+import { config } from './config';
+
 export class WebApi {
 
     constructor(private app: express.Express, private port: number) {
@@ -39,11 +42,37 @@ export class WebApi {
     }
 
     public run() {
-         this.app.listen(this.port);
+        this.app.listen(this.port);
     }
 }
 
-let port = 3000;
-let api = new WebApi(express(), port);
-api.run();
-logger.info(`Listening on ${port}`);
+import * as mongodb from 'mongodb';
+import { data } from './simpleData';
+
+if (config.production) {
+    let port = 3000;
+    let api = new WebApi(express(), port);
+    api.run();
+    logger.info(`Listening on ${port}`);
+} else {
+
+
+    let collection: any;
+    let database: any;
+    mongodb.MongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
+        database = db;
+        collection = database.collection('snapshots');
+        return collection.remove({});
+    }).then((result: any) => {
+        return collection.insertMany(data);
+    }).then((result: any) => {
+        let port = 3000;
+        let api = new WebApi(express(), port);
+        api.run();
+        logger.info(`Listening on ${port}`);
+    });
+}
+
+
+
+

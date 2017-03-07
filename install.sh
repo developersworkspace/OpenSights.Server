@@ -39,7 +39,10 @@ npm run build
 # Change to root of repository
 cd ./../
 
-# Build and run docker compose as deamon
+# Build docker images
+docker-compose build --no-cache
+
+# Run docker compose as deamon
 docker-compose up -d
 
 # -- INSTALL SSL CERT --

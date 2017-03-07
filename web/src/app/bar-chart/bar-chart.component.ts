@@ -83,8 +83,11 @@ export class BarChartComponent {
       .attr("transform", "translate(0," + this.height + ")")
       .call(d3.axisBottom(x))
       .selectAll(".tick text")
-      .call(this.wrap, x.bandwidth());
-      
+      .call(this.wrap, this.margin.bottom)
+      .attr("dx", "3")
+      .attr('text-anchor', 'start')
+      .attr('transform', 'rotate(90)');
+
 
     this.svg.append("g")
       .attr('class', 'axis')
