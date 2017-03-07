@@ -27,6 +27,25 @@ router.get('/groupbyuseragent', (req: Request, res: Response, next: Function) =>
         });
 });
 
+router.get('/groupbyresolution', (req: Request, res: Response, next: Function) => {
+
+    let dataService = new DataService(mongodb.MongoClient);
+
+    dataService.statsQuery({
+        "host": req.query.host
+    },
+        {
+            "resolution": "$resolution"
+        }).then((result: any[]) => {
+            res.json(result.map(x => {
+                return {
+                    key: x._id.userAgent,
+                    value: x.count
+                }
+            }));
+        });
+});
+
 router.get('/hosts', (req: Request, res: Response, next: Function) => {
 
     let dataService = new DataService(mongodb.MongoClient);

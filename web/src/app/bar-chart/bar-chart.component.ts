@@ -93,7 +93,7 @@ export class BarChartComponent {
 
   }
 
-  wrap(text, width) {
+  private wrap(text, width) {
     text.each(function () {
       var text = d3.select(this),
         words = text.text().split(/\s+/).reverse(),

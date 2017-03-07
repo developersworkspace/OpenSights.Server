@@ -52,7 +52,6 @@ export class DataService {
     public listHosts() {
         return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
             var collection = db.collection('snapshots');
-
             return collection.aggregate([
                 { $match: {} }
                 , {

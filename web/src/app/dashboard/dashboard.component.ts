@@ -21,6 +21,7 @@ export class DashboardComponent implements OnInit {
   private host: string;
 
   pageViewsByUserAgent: any[] = null;
+  pageViewsByResolution: any[] = null;
 
   constructor(private http: Http, private route: ActivatedRoute) { }
 
@@ -38,6 +39,15 @@ export class DashboardComponent implements OnInit {
       .map((res: Response) => res.json())
       .subscribe((result: any[]) => {
         this.pageViewsByUserAgent = result;
+      }, (err: Error) => {
+
+      });
+
+
+    this.http.get(environment.apiUri + '/insights/groupbyresolution?host=' + this.host)
+      .map((res: Response) => res.json())
+      .subscribe((result: any[]) => {
+        this.pageViewsByResolution = result;
       }, (err: Error) => {
 
       });
