@@ -73,7 +73,7 @@ export class DataService {
             var collection = db.collection('snapshots');
 
             return collection.aggregate([
-                { $match: {} }
+                { $match: match }
                 , {
                     $group:
                     {

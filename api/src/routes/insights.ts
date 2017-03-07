@@ -39,7 +39,7 @@ router.get('/groupbyresolution', (req: Request, res: Response, next: Function) =
         }).then((result: any[]) => {
             res.json(result.map(x => {
                 return {
-                    key: x._id.userAgent,
+                    key: x._id.resolution,
                     value: x.count
                 }
             }));
