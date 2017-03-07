@@ -1,6 +1,7 @@
 // Imports
 import { Express, Request, Response } from "express";
 import * as mongodb from 'mongodb';
+let useragent = require('useragent');
 
 // Imports configuration
 import { config } from './../config';
@@ -14,6 +15,7 @@ export class DataService {
     public save(ipAddress: string, obj): Promise<Boolean> {
         obj['timestamp'] = this.getUTCSeconds();
         obj['ipAddress'] = ipAddress;
+        obj['formattedUserAgent'] = this.identifyBrowser(obj['userAgent']);
 
         return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
             var collection = db.collection('snapshots');
@@ -72,7 +74,7 @@ export class DataService {
         return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
             var collection = db.collection('snapshots');
 
-            return collection.aggregate([
+            let p: any[] = [
                 { $match: match }
                 , {
                     $group:
@@ -80,19 +82,26 @@ export class DataService {
                         _id: query,
                         count: { $sum: 1 }
                     }
-                }
-            ]).toArray().then((result: any[]) => {
+                },
+                { $sort: { count: -1 } }
+            ];
+
+            return collection.aggregate(p).toArray().then((result: any[]) => {
                 db.close();
                 return result;
             });
         });
     }
 
-
     private getUTCSeconds() {
         var currentTime = new Date()
         var UTCseconds = (currentTime.getTime() + currentTime.getTimezoneOffset() * 60 * 1000) / 1000;
 
         return UTCseconds;
+    }
+
+    private identifyBrowser(userAgent) {
+        let agent = useragent.parse(userAgent);
+        return agent.toAgent();
     }
 }

@@ -5,6 +5,7 @@ import * as https from 'https';
 import * as fs from 'fs';
 import expressWinston = require('express-winston');
 
+
 // Import Routes
 import * as dataRouter from './routes/data';
 import * as insightsRouter from './routes/insights';
@@ -48,6 +49,12 @@ export class WebApi {
 
 import * as mongodb from 'mongodb';
 import { data } from './simpleData';
+let useragent = require('useragent');
+
+function identifyBrowser(userAgent) {
+    let agent = useragent.parse(userAgent);
+    return agent.toAgent();
+}
 
 if (config.production) {
     let port = 3000;
@@ -64,6 +71,10 @@ if (config.production) {
         collection = database.collection('snapshots');
         return collection.remove({});
     }).then((result: any) => {
+        data.forEach(x => {
+            x['formattedUserAgent'] = identifyBrowser(x.userAgent);
+            return x;
+        });
         return collection.insertMany(data);
     }).then((result: any) => {
         let port = 3000;

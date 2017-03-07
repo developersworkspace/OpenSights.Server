@@ -4,12 +4,15 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
+import { DatePickerModule } from 'ng2-datepicker';
 
 // Imports Components
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { BarChartComponent } from './bar-chart/bar-chart.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+
+
 
 let router = RouterModule.forRoot([
   {
@@ -33,7 +36,8 @@ let router = RouterModule.forRoot([
     BrowserModule,
     FormsModule,
     HttpModule,
-    router
+    router,
+    DatePickerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

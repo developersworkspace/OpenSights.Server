@@ -13,7 +13,7 @@ export class BarChartComponent {
   data: any[] = null;
 
   private svg: any;
-  private margin = { top: 20, right: 20, bottom: 120, left: 70 };
+  private margin = { top: 20, right: 20, bottom: 100, left: 70 };
   private width = 960 - this.margin.left - this.margin.right;
   private height = 500 - this.margin.top - this.margin.bottom;
 
@@ -83,16 +83,18 @@ export class BarChartComponent {
       .attr("transform", "translate(0," + this.height + ")")
       .call(d3.axisBottom(x))
       .selectAll(".tick text")
-      .call(this.wrap, this.margin.bottom)
+      .call(this.wrap, this.margin.bottom + 10)
       .attr("dx", "3")
       .attr('text-anchor', 'start')
-      .attr('transform', 'rotate(90)');
+      .attr('transform', 'rotate(90)')
+      .attr('font-weight', 'bold');
 
 
     this.svg.append("g")
       .attr('class', 'axis')
       .call(d3.axisLeft(y))
-      .selectAll("text")
+      .selectAll(".tick text")
+      .attr('font-weight', 'bold');
 
   }
 

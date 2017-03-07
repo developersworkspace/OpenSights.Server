@@ -5,9 +5,52 @@
     </div>
   </div>
   <div class="row">
+    <div class="col-md-4">
+      <label>From Date</label>
+      <br />
+      <ng2-datepicker [options]="options" (outputEvents)="onChange_Dates($event)" [(ngModel)]="fromDate"></ng2-datepicker>
+    </div>
+    <div class="col-md-4">
+      <label>To Date</label>
+      <br />
+      <ng2-datepicker [options]="options" (outputEvents)="onChange_Dates($event)" [(ngModel)]="toDate"></ng2-datepicker>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <h4>Page Views by Path</h4>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Path</th>
+            <th>Page Views</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of pageViewsByPath">
+            <td>{{item.key}}</td>
+            <td>{{item.value}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
     <div class="col-md-8">
       <h4>Page Views by User Agent</h4>
       <app-bar-chart [data]="pageViewsByUserAgent"></app-bar-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <h4>Page Views by Platform</h4>
+      <app-bar-chart [data]="pageViewsByPlatform"></app-bar-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <h4>Page Views by Language</h4>
+      <app-bar-chart [data]="pageViewsByLanguage"></app-bar-chart>
     </div>
   </div>
   <div class="row">
