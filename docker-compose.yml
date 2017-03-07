@@ -12,3 +12,7 @@ services:
         image: "mongo"
         volumes:
         - /docker/mongodb:/data/db
+    web:
+        build: web
+        ports:
+        - "8080:8080"
