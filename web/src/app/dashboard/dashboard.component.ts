@@ -33,6 +33,8 @@ export class DashboardComponent implements OnInit {
   pageViewsGroupedByPlatform: any[] = null;
   uniqueUsersGroupedByPlatform: any[] = null;
   averagePageLoadTimeGroupedByPath: any[] = null;
+  uniqueUsersByHour: any[] = null;
+  uniqueUsersByMinute: any[] = null;
 
   constructor(private http: Http, private route: ActivatedRoute) {
     // this.options = new DatePickerOptions({
@@ -121,7 +123,7 @@ export class DashboardComponent implements OnInit {
 
       });
 
-      this.getData('uniqueusersgroupedbyplatform')
+    this.getData('uniqueusersgroupedbyplatform')
       .subscribe((result: any[]) => {
         this.uniqueUsersGroupedByPlatform = result;
       }, (err: Error) => {
@@ -131,6 +133,20 @@ export class DashboardComponent implements OnInit {
     this.getData('averagepageloadtimebygroupedpath')
       .subscribe((result: any[]) => {
         this.averagePageLoadTimeGroupedByPath = result;
+      }, (err: Error) => {
+
+      });
+
+    this.getData('uniqueusersbyhour')
+      .subscribe((result: any[]) => {
+        this.uniqueUsersByHour = result;
+      }, (err: Error) => {
+
+      });
+
+    this.getData('uniqueusersbyminute')
+      .subscribe((result: any[]) => {
+        this.uniqueUsersByMinute = result;
       }, (err: Error) => {
 
       });

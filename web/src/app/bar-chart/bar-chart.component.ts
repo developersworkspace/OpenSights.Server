@@ -90,10 +90,12 @@ export class BarChartComponent {
       .call(d3.axisBottom(x))
       .selectAll(".tick text")
       .call(this.wrap, this.margin.bottom + 10)
-      .attr("dx", "3")
       .attr('text-anchor', 'start')
       .attr('transform', 'rotate(90)')
-      .attr('font-weight', 'bold');
+      .attr('font-weight', 'bold')
+      .selectAll('tspan')
+      .attr("x", "8")
+      .attr("y", "-5")
 
 
     this.svg.append("g")

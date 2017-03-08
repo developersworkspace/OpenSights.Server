@@ -9,8 +9,14 @@ import { DataService } from './../services/data';
 let router = express.Router();
 
 
-router.get('/abc', (req: Request, res: Response, next: Function) => {
-    statsQueryByMinuteWrapper(req, res).then(result => {
+router.get('/uniqueusersbyhour', (req: Request, res: Response, next: Function) => {
+    statsQueryUniqueUsersByHourWrapper(req, res).then(result => {
+        res.json(result);
+    });
+});
+
+router.get('/uniqueusersbyminute', (req: Request, res: Response, next: Function) => {
+    statsQueryUniqueUsersByMinuteWrapper(req, res).then(result => {
         res.json(result);
     });
 });
@@ -102,10 +108,22 @@ function statsQueryWrapper(req: Request, res: Response, property: string, limit:
     });
 }
 
-function statsQueryByMinuteWrapper(req: Request, res: Response) {
+function statsQueryUniqueUsersByMinuteWrapper(req: Request, res: Response) {
     let dataService = new DataService(mongodb.MongoClient);
-    return dataService.statsQueryByDay(getMatchObject(req, false), getGroupByObjectByMinute()).then((result: any[]) => {
+    return dataService.statsQueryGroupedByTimestamp(getMatchObject(req, true), getGroupByObjectByMinute()).then((result: any[]) => {
         result = mapResultForByMinute(result);
+        result = sortResultForByTimestamp(result);
+        result = limitResult(result, 10);
+        return result;
+    });
+}
+
+function statsQueryUniqueUsersByHourWrapper(req: Request, res: Response) {
+    let dataService = new DataService(mongodb.MongoClient);
+    return dataService.statsQueryGroupedByTimestamp(getMatchObject(req, true), getGroupByObjectByHour()).then((result: any[]) => {
+        result = mapResultForByHour(result);
+        result = sortResultForByTimestamp(result);
+        result = limitResult(result, 12);
         return result;
     });
 }
@@ -140,9 +158,24 @@ function mapResult(result: any[], isAverage: Boolean) {
 function mapResultForByMinute(result: any[]) {
     return result.map(x => {
         return {
-            key: x._id.minute,
+            key: toDoubleDigitsString(x._id.hour) + ':' + toDoubleDigitsString(x._id.minute) + ' ' + toDoubleDigitsString(x._id.day) + '-' + toDoubleDigitsString(x._id.month) + '-' + x._id.year,
             value: x.count
         }
+    });
+}
+
+function mapResultForByHour(result: any[]) {
+    return result.map(x => {
+        return {
+            key: toDoubleDigitsString(x._id.hour) + ':' + '00' + ' ' + toDoubleDigitsString(x._id.day) + '-' + toDoubleDigitsString(x._id.month) + '-' + x._id.year,
+            value: x.count
+        }
+    });
+}
+
+function sortResultForByTimestamp(result: any[]) {
+    return result.sort((a, b) => {
+        return new Date(a.key).getTime() - new Date(b.key).getTime();
     });
 }
 
@@ -152,6 +185,13 @@ function limitResult(result: any[], limit: number) {
     }
 
     return result;
+}
+function toDoubleDigitsString(n: number) {
+    if (n < 10) {
+        return '0' + n;
+    }
+
+    return n;
 }
 
 function getMatchObject(req: Request, isUniqueUsers: Boolean) {
@@ -185,6 +225,15 @@ function getGroupByObjectByMinute() {
     return {
         "hour": { $hour: "$timestampObject" },
         "minute": { $minute: "$timestampObject" },
+        "day": { $dayOfMonth: "$timestampObject" },
+        "month": { $month: "$timestampObject" },
+        "year": { $year: "$timestampObject" }
+    };
+}
+
+function getGroupByObjectByHour() {
+    return {
+        "hour": { $hour: "$timestampObject" },
         "day": { $dayOfMonth: "$timestampObject" },
         "month": { $month: "$timestampObject" },
         "year": { $year: "$timestampObject" }

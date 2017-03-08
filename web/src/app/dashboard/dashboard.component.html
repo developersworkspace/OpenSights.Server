@@ -42,6 +42,16 @@
   </div>
   <div class="row">
     <div class="col-md-6">
+      <h4>Unique Users by Hour</h4>
+      <app-bar-chart [data]="uniqueUsersByHour"></app-bar-chart>
+    </div>
+    <div class="col-md-6">
+      <h4>Unique Users by Minute</h4>
+      <app-bar-chart [data]="uniqueUsersByMinute"></app-bar-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
       <h4>Page Views by User Agent</h4>
       <app-bar-chart [data]="pageViewsGroupedByUserAgent"></app-bar-chart>
     </div>

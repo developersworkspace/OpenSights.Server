@@ -101,24 +101,25 @@ export class DataService {
         });
     }
 
-    public statsQueryByDay(match: any, query: any): Promise<any[]> {
+    public statsQueryGroupedByTimestamp(match: any, query: any): Promise<any[]> {
         return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
             var collection = db.collection('snapshots');
 
             let p: any[] = [
-                // { $match: match },
+                { $match: match },
                 {
                     $project: {
                         host: "$host",
                         formattedUserAgent: "$formattedUserAgent",
-                        timestamp: { $multiply: [ "$timestamp", 1000 ] }
+                        timestamp: { $multiply: ["$timestamp", 1000] }
                     }
                 },
                 {
                     $project: {
                         host: "$host",
                         formattedUserAgent: "$formattedUserAgent",
-                        timestampObject: { $add: [new Date(0), "$timestamp"] }
+                        timestampObject: { $add: [new Date(0), "$timestamp"] },
+                        timestamp: "$timestamp"
                     }
                 },
                 {
@@ -127,13 +128,11 @@ export class DataService {
                         _id: query,
                         count: { $sum: 1 }
                     }
-                },
-                { $sort: { count: -1 } }
+                }
             ];
 
             return collection.aggregate(p).toArray().then((result: any[]) => {
                 db.close();
-                console.log(result[0])
                 return result;
             });
         });
