@@ -49,12 +49,6 @@ export class WebApi {
 
 import * as mongodb from 'mongodb';
 import { data } from './simpleData';
-let useragent = require('useragent');
-
-function identifyBrowser(userAgent) {
-    let agent = useragent.parse(userAgent);
-    return agent.toAgent();
-}
 
 if (config.production) {
     let port = 3000;
@@ -72,8 +66,6 @@ if (config.production) {
         return collection.remove({});
     }).then((result: any) => {
         data.forEach(x => {
-            x['formattedUserAgent'] = identifyBrowser(x.userAgent);
-            x['pageLoadTime'] = Math.floor(Math.random() * 1500);
             return x;
         });
         return collection.insertMany(data);

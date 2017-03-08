@@ -4,21 +4,9 @@
       <h3>Host: {{host}}</h3>
     </div>
   </div>
-  <!--<div class="row">
-    <div class="col-md-4">
-      <label>From Date</label>
-      <br />
-      <ng2-datepicker [options]="options" (outputEvents)="onChange_Dates($event)" [(ngModel)]="fromDate"></ng2-datepicker>
-    </div>
-    <div class="col-md-4">
-      <label>To Date</label>
-      <br />
-      <ng2-datepicker [options]="options" (outputEvents)="onChange_Dates($event)" [(ngModel)]="toDate"></ng2-datepicker>
-    </div>
-  </div>-->
   <div class="row">
-    <div class="col-md-8">
-      <h4>Page Views by Path (Top 5 Paths with the most page views)</h4>
+    <div class="col-md-6">
+      <h4>Page Views by Path (Top 5)</h4>
       <table class="table table-striped">
         <thead>
           <tr>
@@ -27,17 +15,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of pageViewsByPath">
+          <tr *ngFor="let item of pageViewsGroupedByPath">
             <td>{{item.key}}</td>
             <td>{{item.value}}</td>
           </tr>
         </tbody>
       </table>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-md-8">
-      <h4>Average Page Load Time by Path (Top 5 Paths with the slowest page load time)</h4>
+    <div class="col-md-6">
+      <h4>Average Page Load Time by Path (Bottom 5)</h4>
       <table class="table table-striped">
         <thead>
           <tr>
@@ -46,7 +32,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of averagePageLoadTimeByPath">
+          <tr *ngFor="let item of averagePageLoadTimeGroupedByPath">
             <td>{{item.key}}</td>
             <td>{{item.value}} ms</td>
           </tr>
@@ -55,33 +41,43 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-6">
       <h4>Page Views by User Agent</h4>
-      <app-bar-chart [data]="pageViewsByUserAgent"></app-bar-chart>
+      <app-bar-chart [data]="pageViewsGroupedByUserAgent"></app-bar-chart>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-6">
       <h4>Unique Users by User Agent</h4>
-      <app-bar-chart [data]="uniqueUsersByUserAgent"></app-bar-chart>
+      <app-bar-chart [data]="uniqueUsersGroupedByUserAgent"></app-bar-chart>
     </div>
   </div>
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-6">
       <h4>Page Views by Platform</h4>
-      <app-bar-chart [data]="pageViewsByPlatform"></app-bar-chart>
+      <app-bar-chart [data]="pageViewsGroupedByPlatform"></app-bar-chart>
+    </div>
+    <div class="col-md-6">
+      <h4>Unique Users by Platform</h4>
+      <app-bar-chart [data]="uniqueUsersGroupedByPlatform"></app-bar-chart>
     </div>
   </div>
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-6">
       <h4>Page Views by Language</h4>
-      <app-bar-chart [data]="pageViewsByLanguage"></app-bar-chart>
+      <app-bar-chart [data]="pageViewsGroupedByLanguage"></app-bar-chart>
+    </div>
+    <div class="col-md-6">
+      <h4>Unique Users by Language</h4>
+      <app-bar-chart [data]="uniqueUsersGroupedByLanguage"></app-bar-chart>
     </div>
   </div>
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-6">
       <h4>Page Views by Resolution</h4>
-      <app-bar-chart [data]="pageViewsByResolution"></app-bar-chart>
+      <app-bar-chart [data]="pageViewsGroupedByResolution"></app-bar-chart>
+    </div>
+    <div class="col-md-6">
+      <h4>Unique Users by Resolution</h4>
+      <app-bar-chart [data]="uniqueUsersGroupedByResolution"></app-bar-chart>
     </div>
   </div>
 </div>

@@ -17,9 +17,12 @@ export class BarChartComponent {
   private width = 960 - this.margin.left - this.margin.right;
   private height = 500 - this.margin.top - this.margin.bottom;
 
-  constructor(private elementRef: ElementRef) { }
+  constructor(private elementRef: ElementRef) {
+
+  }
 
   ngOnInit() {
+
   }
 
   ngOnChanges(changes: any) {
@@ -30,6 +33,9 @@ export class BarChartComponent {
 
 
   ngAfterViewInit() {
+
+    this.width = this.elementRef.nativeElement.querySelector('div').clientWidth - this.margin.left - this.margin.right;
+    
     this.svg = d3.select(this.elementRef.nativeElement).select('svg')
       .attr("width", this.width + this.margin.left + this.margin.right)
       .attr("height", this.height + this.margin.top + this.margin.bottom)

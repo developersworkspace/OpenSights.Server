@@ -28,6 +28,14 @@ export class DataService {
         });
     }
 
+    public getDatabaseStats(): Promise<any> {
+        return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
+            return db.stats();
+        }).then((result: any) => {
+            return result;
+        });
+    }
+
     public query(query: any): Promise<any[]> {
         return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
             var collection = db.collection('snapshots');
