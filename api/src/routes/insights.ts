@@ -8,6 +8,13 @@ import { DataService } from './../services/data';
 
 let router = express.Router();
 
+
+router.get('/abc', (req: Request, res: Response, next: Function) => {
+    statsQueryByMinuteWrapper(req, res).then(result => {
+        res.json(result);
+    });
+});
+
 router.get('/pageviewsgroupedbyuseragent', (req: Request, res: Response, next: Function) => {
     statsQueryWrapper(req, res, 'formattedUserAgent', 10).then(result => {
         res.json(result);
@@ -89,35 +96,52 @@ router.get('/stats', (req: Request, res: Response, next: Function) => {
 function statsQueryWrapper(req: Request, res: Response, property: string, limit: number = null) {
     let dataService = new DataService(mongodb.MongoClient);
     return dataService.statsQuery(getMatchObject(req, false), getGroupByObject(property)).then((result: any[]) => {
-            result = mapResult(result, false);
-            result = limitResult(result, limit);
-            return result;
-        });
+        result = mapResult(result, false);
+        result = limitResult(result, limit);
+        return result;
+    });
+}
+
+function statsQueryByMinuteWrapper(req: Request, res: Response) {
+    let dataService = new DataService(mongodb.MongoClient);
+    return dataService.statsQueryByDay(getMatchObject(req, false), getGroupByObjectByMinute()).then((result: any[]) => {
+        result = mapResultForByMinute(result);
+        return result;
+    });
 }
 
 function statsQueryUniqueUsersWrapper(req: Request, res: Response, property: string, limit: number = null) {
     let dataService = new DataService(mongodb.MongoClient);
     return dataService.statsQuery(getMatchObject(req, true), getGroupByObject(property)).then((result: any[]) => {
-            result = mapResult(result, false);
-            result = limitResult(result, limit);
-            return result;
-        });
+        result = mapResult(result, false);
+        result = limitResult(result, limit);
+        return result;
+    });
 }
 
 function statsQueryWithAverageWrapper(req: Request, res: Response, property: string, averageProperty: string, limit: number = null) {
     let dataService = new DataService(mongodb.MongoClient);
     return dataService.statsQueryWithAverage(getMatchObject(req, false), getGroupByObject(property), averageProperty).then((result: any[]) => {
-            result = mapResult(result, true);
-            result = limitResult(result, limit);
-            return result;
-        });
+        result = mapResult(result, true);
+        result = limitResult(result, limit);
+        return result;
+    });
 }
 
 function mapResult(result: any[], isAverage: Boolean) {
     return result.map(x => {
         return {
             key: x._id.key,
-            value: isAverage? Math.round(x.average) : x.count
+            value: isAverage ? Math.round(x.average) : x.count
+        }
+    });
+}
+
+function mapResultForByMinute(result: any[]) {
+    return result.map(x => {
+        return {
+            key: x._id.minute,
+            value: x.count
         }
     });
 }
@@ -154,6 +178,16 @@ function getMatchObject(req: Request, isUniqueUsers: Boolean) {
 function getGroupByObject(property: string) {
     return {
         "key": "$" + property
+    };
+}
+
+function getGroupByObjectByMinute() {
+    return {
+        "hour": { $hour: "$timestampObject" },
+        "minute": { $minute: "$timestampObject" },
+        "day": { $dayOfMonth: "$timestampObject" },
+        "month": { $month: "$timestampObject" },
+        "year": { $year: "$timestampObject" }
     };
 }
 

@@ -101,6 +101,44 @@ export class DataService {
         });
     }
 
+    public statsQueryByDay(match: any, query: any): Promise<any[]> {
+        return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
+            var collection = db.collection('snapshots');
+
+            let p: any[] = [
+                // { $match: match },
+                {
+                    $project: {
+                        host: "$host",
+                        formattedUserAgent: "$formattedUserAgent",
+                        timestamp: { $multiply: [ "$timestamp", 1000 ] }
+                    }
+                },
+                {
+                    $project: {
+                        host: "$host",
+                        formattedUserAgent: "$formattedUserAgent",
+                        timestampObject: { $add: [new Date(0), "$timestamp"] }
+                    }
+                },
+                {
+                    $group:
+                    {
+                        _id: query,
+                        count: { $sum: 1 }
+                    }
+                },
+                { $sort: { count: -1 } }
+            ];
+
+            return collection.aggregate(p).toArray().then((result: any[]) => {
+                db.close();
+                console.log(result[0])
+                return result;
+            });
+        });
+    }
+
     public statsQueryWithAverage(match: any, query: any, property: string): Promise<any[]> {
         return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
             var collection = db.collection('snapshots');
