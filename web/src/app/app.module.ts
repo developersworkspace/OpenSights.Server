@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
-import { DatePickerModule } from 'ng2-datepicker';
+// import { DatePickerModule } from 'ng2-datepicker';
 
 // Imports Components
 import { AppComponent } from './app.component';
@@ -37,7 +37,7 @@ let router = RouterModule.forRoot([
     FormsModule,
     HttpModule,
     router,
-    DatePickerModule
+    // DatePickerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

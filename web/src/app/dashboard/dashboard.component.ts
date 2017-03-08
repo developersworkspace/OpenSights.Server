@@ -12,7 +12,7 @@ import 'rxjs/add/operator/catch';
 import { environment } from './../../environments/environment';
 
 // Imports components
-import { DatePickerOptions, DateModel } from 'ng2-datepicker';
+// import { DatePickerOptions, DateModel } from 'ng2-datepicker';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,21 +30,21 @@ export class DashboardComponent implements OnInit {
   pageViewsByPlatform: any[] = null;
   averagePageLoadTimeByPath: any[] = null;
 
-  fromDate: DateModel;
-  toDate: DateModel;
-  options: DatePickerOptions;
+  // fromDate: DateModel;
+  // toDate: DateModel;
+  // options: DatePickerOptions;
 
   constructor(private http: Http, private route: ActivatedRoute) {
-    this.options = new DatePickerOptions({
-      initialDate: new Date()
-    });
+    // this.options = new DatePickerOptions({
+    //   initialDate: new Date()
+    // });
   }
 
-  onChange_Dates(obj: any) {
-    if (obj.data instanceof Object) {
-      this.loadData();
-    }
-  }
+  // onChange_Dates(obj: any) {
+  //   if (obj.data instanceof Object) {
+  //     this.loadData();
+  //   }
+  // }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -55,13 +55,20 @@ export class DashboardComponent implements OnInit {
 
   loadData() {
 
-    if (this.fromDate == null || this.toDate == null) {
-      return;
-    }
+    // if (this.fromDate == null || this.toDate == null) {
+    //   return;
+    // }
 
-    let fromDate = new Date(this.fromDate.formatted);
-    let toDate = new Date(this.toDate.formatted);
+    // let fromDate = new Date(this.fromDate.formatted);
+    // let toDate = new Date(this.toDate.formatted);
+    // toDate.setHours(23, 59, 59, 999);
+
+    let fromDate = new Date();
+    fromDate.setDate(fromDate.getDate() - 2);
+
+    let toDate = new Date();
     toDate.setHours(23, 59, 59, 999);
+
 
     this.http.get(environment.apiUri + '/insights/groupbyuseragent?host=' + this.host + '&fromDate=' + this.getUTCSeconds(fromDate) + '&toDate=' + this.getUTCSeconds(toDate))
       .map((res: Response) => res.json())
