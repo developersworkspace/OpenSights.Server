@@ -18,7 +18,7 @@
   </div>
   <div class="row">
     <div class="col-md-8">
-      <h4>Page Views by Path</h4>
+      <h4>Page Views by Path (Top 5 Paths with the most page views)</h4>
       <table class="table table-striped">
         <thead>
           <tr>
@@ -30,6 +30,25 @@
           <tr *ngFor="let item of pageViewsByPath">
             <td>{{item.key}}</td>
             <td>{{item.value}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <h4>Average Page Load Time by Path (Top 5 Paths with the slowest page load time)</h4>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Path</th>
+            <th>Average Load Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of averagePageLoadTimeByPath">
+            <td>{{item.key}}</td>
+            <td>{{item.value}} ms</td>
           </tr>
         </tbody>
       </table>

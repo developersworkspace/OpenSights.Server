@@ -93,6 +93,30 @@ export class DataService {
         });
     }
 
+    public statsQueryWithAverage(match: any, query: any, property: string): Promise<any[]> {
+        return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
+            var collection = db.collection('snapshots');
+
+            let p: any[] = [
+                { $match: match }
+                , {
+                    $group:
+                    {
+                        _id: query,
+                        count: { $sum: 1 },
+                        average: { $avg: '$' + property }
+                    }
+                },
+                { $sort: { average: -1 } }
+            ];
+
+            return collection.aggregate(p).toArray().then((result: any[]) => {
+                db.close();
+                return result;
+            });
+        });
+    }
+
     private getUTCSeconds() {
         var currentTime = new Date()
         var UTCseconds = (currentTime.getTime() + currentTime.getTimezoneOffset() * 60 * 1000) / 1000;

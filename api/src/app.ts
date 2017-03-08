@@ -73,6 +73,7 @@ if (config.production) {
     }).then((result: any) => {
         data.forEach(x => {
             x['formattedUserAgent'] = identifyBrowser(x.userAgent);
+            x['pageLoadTime'] = Math.floor(Math.random() * 1500);
             return x;
         });
         return collection.insertMany(data);

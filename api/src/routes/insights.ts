@@ -38,6 +38,18 @@ router.get('/groupbypath', (req: Request, res: Response, next: Function) => {
     });
 });
 
+router.get('/averagepageloadtimebypath', (req: Request, res: Response, next: Function) => {
+    statsQueryWithAverageByDayWrapper(req, res, 'path', 'pageLoadTime', 5).then(result => {
+        result = result.map(x => {
+            return {
+                key: x.key,
+                value: Math.round(x.value)
+            };
+        });
+        res.json(result);
+    });
+});
+
 router.get('/hosts', (req: Request, res: Response, next: Function) => {
 
     let dataService = new DataService(mongodb.MongoClient);
@@ -66,7 +78,33 @@ function statsQueryWrapper(req: Request, res: Response, property: string, limit:
                 }
             });
 
-            if (result.length > limit) {
+            if (limit != null && result.length > limit) {
+                result = result.slice(0, limit);
+            }
+            return result;
+        });
+}
+
+function statsQueryWithAverageByDayWrapper(req: Request, res: Response, property: string, averageProperty: string, limit: number = null) {
+    let dataService = new DataService(mongodb.MongoClient);
+    return dataService.statsQueryWithAverage({
+        "host": req.query.host,
+        "timestamp": {
+            $gt: parseInt(req.query.fromDate),
+            $lt: parseInt(req.query.toDate)
+        }
+    },
+        {
+            "key": "$" + property
+        }, averageProperty).then((result: any[]) => {
+            result = result.map(x => {
+                return {
+                    key: x._id.key,
+                    value: x.average
+                }
+            });
+
+            if (limit != null && result.length > limit) {
                 result = result.slice(0, limit);
             }
             return result;

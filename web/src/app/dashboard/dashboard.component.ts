@@ -28,6 +28,7 @@ export class DashboardComponent implements OnInit {
   pageViewsByResolution: any[] = null;
   pageViewsByLanguage: any[] = null;
   pageViewsByPlatform: any[] = null;
+  averagePageLoadTimeByPath: any[] = null;
 
   fromDate: DateModel;
   toDate: DateModel;
@@ -95,10 +96,18 @@ export class DashboardComponent implements OnInit {
 
       });
 
-      this.http.get(environment.apiUri + '/insights/groupbyplatform?host=' + this.host + '&fromDate=' + this.getUTCSeconds(fromDate) + '&toDate=' + this.getUTCSeconds(toDate))
+    this.http.get(environment.apiUri + '/insights/groupbyplatform?host=' + this.host + '&fromDate=' + this.getUTCSeconds(fromDate) + '&toDate=' + this.getUTCSeconds(toDate))
       .map((res: Response) => res.json())
       .subscribe((result: any[]) => {
         this.pageViewsByPlatform = result;
+      }, (err: Error) => {
+
+      });
+
+    this.http.get(environment.apiUri + '/insights/averagepageloadtimebypath?host=' + this.host + '&fromDate=' + this.getUTCSeconds(fromDate) + '&toDate=' + this.getUTCSeconds(toDate))
+      .map((res: Response) => res.json())
+      .subscribe((result: any[]) => {
+        this.averagePageLoadTimeByPath = result;
       }, (err: Error) => {
 
       });
