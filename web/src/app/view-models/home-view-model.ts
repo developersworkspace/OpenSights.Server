@@ -9,7 +9,7 @@ import { environment } from './../../environments/environment';
 
 export class HomeViewModel {
 
-    hosts: string[] = ["worldofrations.com", "developersworkspace.co.za"];
+    hosts: string[] = [];
 
     constructor(private http: Http) {
         this.http.get(environment.apiUri + '/insights/hosts')

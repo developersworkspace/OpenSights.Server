@@ -14,6 +14,12 @@ router.get('/groupbyuseragent', (req: Request, res: Response, next: Function) =>
     });
 });
 
+router.get('/groupbyuseragentuniqueusers', (req: Request, res: Response, next: Function) => {
+    statsQueryUniqueUsersWrapper(req, res, 'formattedUserAgent', 10).then(result => {
+        res.json(result);
+    });
+});
+
 router.get('/groupbyresolution', (req: Request, res: Response, next: Function) => {
     statsQueryWrapper(req, res, 'resolution', 10).then(result => {
         res.json(result);
@@ -63,6 +69,33 @@ function statsQueryWrapper(req: Request, res: Response, property: string, limit:
     let dataService = new DataService(mongodb.MongoClient);
     return dataService.statsQuery({
         "host": req.query.host,
+        "timestamp": {
+            $gt: parseInt(req.query.fromDate),
+            $lt: parseInt(req.query.toDate)
+        }
+    },
+        {
+            "key": "$" + property
+        }).then((result: any[]) => {
+            result = result.map(x => {
+                return {
+                    key: x._id.key,
+                    value: x.count
+                }
+            });
+
+            if (limit != null && result.length > limit) {
+                result = result.slice(0, limit);
+            }
+            return result;
+        });
+}
+
+function statsQueryUniqueUsersWrapper(req: Request, res: Response, property: string, limit: number = null) {
+    let dataService = new DataService(mongodb.MongoClient);
+    return dataService.statsQuery({
+        "host": req.query.host,
+        isNew: true,
         "timestamp": {
             $gt: parseInt(req.query.fromDate),
             $lt: parseInt(req.query.toDate)

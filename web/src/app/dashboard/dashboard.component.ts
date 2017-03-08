@@ -25,6 +25,7 @@ export class DashboardComponent implements OnInit {
 
   pageViewsByPath: any[] = null;
   pageViewsByUserAgent: any[] = null;
+  uniqueUsersByUserAgent: any[] = null;
   pageViewsByResolution: any[] = null;
   pageViewsByLanguage: any[] = null;
   pageViewsByPlatform: any[] = null;
@@ -74,6 +75,14 @@ export class DashboardComponent implements OnInit {
       .map((res: Response) => res.json())
       .subscribe((result: any[]) => {
         this.pageViewsByUserAgent = result;
+      }, (err: Error) => {
+
+      });
+
+    this.http.get(environment.apiUri + '/insights/groupbyuseragentuniqueusers?host=' + this.host + '&fromDate=' + this.getUTCSeconds(fromDate) + '&toDate=' + this.getUTCSeconds(toDate))
+      .map((res: Response) => res.json())
+      .subscribe((result: any[]) => {
+        this.uniqueUsersByUserAgent = result;
       }, (err: Error) => {
 
       });
