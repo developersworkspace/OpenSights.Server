@@ -12,6 +12,9 @@ export class BarChartComponent {
   @Input()
   data: any[] = null;
 
+  @Input()
+  yAxisLabel: string = null;
+
   private svg: any;
   private margin = { top: 20, right: 20, bottom: 100, left: 70 };
   private width = 960 - this.margin.left - this.margin.right;
@@ -49,7 +52,7 @@ export class BarChartComponent {
       .attr("x", 0 - (this.height / 2))
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text("Page Views");
+      .text(this.yAxisLabel);
 
     this.draw();
 

@@ -42,52 +42,52 @@
   </div>
   <div class="row">
     <div class="col-md-6">
-      <h4>Unique Users by Hour</h4>
-      <app-bar-chart [data]="uniqueUsersByHour"></app-bar-chart>
+      <h4>New Users by Hour</h4>
+      <app-bar-chart [data]="newUsersByHour" [yAxisLabel]="'New Users'"></app-bar-chart>
     </div>
     <div class="col-md-6">
-      <h4>Unique Users by Minute</h4>
-      <app-bar-chart [data]="uniqueUsersByMinute"></app-bar-chart>
+      <h4>New Users by Minute</h4>
+      <app-bar-chart [data]="newUsersByMinute" [yAxisLabel]="'New Users'"></app-bar-chart>
     </div>
   </div>
   <div class="row">
     <div class="col-md-6">
       <h4>Page Views by User Agent</h4>
-      <app-bar-chart [data]="pageViewsGroupedByUserAgent"></app-bar-chart>
+      <app-bar-chart [data]="pageViewsGroupedByUserAgent" [yAxisLabel]="'Page Views'"></app-bar-chart>
     </div>
     <div class="col-md-6">
       <h4>Unique Users by User Agent</h4>
-      <app-bar-chart [data]="uniqueUsersGroupedByUserAgent"></app-bar-chart>
+      <app-bar-chart [data]="uniqueUsersGroupedByUserAgent" [yAxisLabel]="'Unique Users'"></app-bar-chart>
     </div>
   </div>
   <div class="row">
     <div class="col-md-6">
       <h4>Page Views by Platform</h4>
-      <app-bar-chart [data]="pageViewsGroupedByPlatform"></app-bar-chart>
+      <app-bar-chart [data]="pageViewsGroupedByPlatform" [yAxisLabel]="'Page Views'"></app-bar-chart>
     </div>
     <div class="col-md-6">
       <h4>Unique Users by Platform</h4>
-      <app-bar-chart [data]="uniqueUsersGroupedByPlatform"></app-bar-chart>
+      <app-bar-chart [data]="uniqueUsersGroupedByPlatform" [yAxisLabel]="'Unique Users'"></app-bar-chart>
     </div>
   </div>
   <div class="row">
     <div class="col-md-6">
       <h4>Page Views by Language</h4>
-      <app-bar-chart [data]="pageViewsGroupedByLanguage"></app-bar-chart>
+      <app-bar-chart [data]="pageViewsGroupedByLanguage" [yAxisLabel]="'Page Views'"></app-bar-chart>
     </div>
     <div class="col-md-6">
       <h4>Unique Users by Language</h4>
-      <app-bar-chart [data]="uniqueUsersGroupedByLanguage"></app-bar-chart>
+      <app-bar-chart [data]="uniqueUsersGroupedByLanguage" [yAxisLabel]="'Unique Users'"></app-bar-chart>
     </div>
   </div>
   <div class="row">
     <div class="col-md-6">
       <h4>Page Views by Resolution</h4>
-      <app-bar-chart [data]="pageViewsGroupedByResolution"></app-bar-chart>
+      <app-bar-chart [data]="pageViewsGroupedByResolution" [yAxisLabel]="'Page Views'"></app-bar-chart>
     </div>
     <div class="col-md-6">
       <h4>Unique Users by Resolution</h4>
-      <app-bar-chart [data]="uniqueUsersGroupedByResolution"></app-bar-chart>
+      <app-bar-chart [data]="uniqueUsersGroupedByResolution" [yAxisLabel]="'Unique Users'"></app-bar-chart>
     </div>
   </div>
 </div>
