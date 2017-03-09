@@ -81,9 +81,14 @@ export class BarChartComponent {
       .attr("class", "bar")
       .attr("x", (d) => x(d.key))
       .attr("width", x.bandwidth())
+      .attr('fill', (d) => '#41B380')
+      .attr('height', (d) => this.height - y(0))
+      .attr("y", (d) => y(0))
+      .transition()
+      .duration(1000)
       .attr("y", (d) => y(d.value))
-      .attr("height", (d) => this.height - y(d.value))
-      .attr('fill', (d) => '#41B380');
+      .attr('height', (d) => this.height - y(d.value))
+      
 
     this.svg.selectAll('g.axis').remove();
 
