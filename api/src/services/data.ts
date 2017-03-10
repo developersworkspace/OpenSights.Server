@@ -12,7 +12,7 @@ export class DataService {
 
     }
 
-    public save(ipAddress: string, obj): Promise<Boolean> {
+    public save(ipAddress: string, obj: Object): Promise<Boolean> {
         obj['timestamp'] = this.getUTCSeconds();
         obj['ipAddress'] = ipAddress;
         obj['formattedUserAgent'] = this.identifyBrowser(obj['userAgent']);
@@ -56,9 +56,6 @@ export class DataService {
                         _id: {
                             "key": "$" + property
                         },
-                        list: {
-                            $push: '$$ROOT'
-                        },
                         count: { $sum: 1 }
                     }
                 },
@@ -77,7 +74,6 @@ export class DataService {
 
             return collection.aggregate(p).toArray().then((result: any[]) => {
                 db.close();
-                console.log(result[0]);
                 return result;
             });
         });
@@ -97,15 +93,12 @@ export class DataService {
                             $lt: toDate
                         }
                     }
-                }, 
+                },
                 {
                     $group:
                     {
                         _id: {
                             "key": "$" + property
-                        },
-                        list: {
-                            $push: '$$ROOT'
                         },
                         count: { $sum: 1 }
                     }
@@ -168,9 +161,6 @@ export class DataService {
                             "month": { $month: "$timestampObject" },
                             "year": { $year: "$timestampObject" }
                         },
-                        list: {
-                            $push: '$$ROOT'
-                        },
                         count: { $sum: 1 }
                     }
                 },
@@ -208,7 +198,7 @@ export class DataService {
                             $lt: toDate
                         }
                     }
-                }, 
+                },
                 {
                     $project: {
                         host: "$host",
@@ -231,9 +221,6 @@ export class DataService {
                             "day": { $dayOfMonth: "$timestampObject" },
                             "month": { $month: "$timestampObject" },
                             "year": { $year: "$timestampObject" }
-                        },
-                        list: {
-                            $push: '$$ROOT'
                         },
                         count: { $sum: 1 }
                     }
@@ -271,7 +258,7 @@ export class DataService {
                             $lt: toDate
                         }
                     }
-                }, 
+                },
                 {
                     $group:
                     {
@@ -279,7 +266,7 @@ export class DataService {
                             "key": "$" + property
                         },
                         list: {
-                            $push: '$$ROOT'
+                            $push: '$uuid'
                         },
                         count: { $sum: 1 }
                     }
@@ -301,8 +288,13 @@ export class DataService {
             return collection.aggregate(p).toArray().then((result: any[]) => {
                 db.close();
                 result.forEach(x => {
-                    x.count = this.distinct(x.list, 'uuid').length;
-                })
+                    x.count = this.distinct(x.list).length;
+                });
+
+                result = result.sort((a, b) => {
+                    return b.count - a.count
+                });
+
                 return result;
             });
         });
@@ -322,7 +314,7 @@ export class DataService {
                             $lt: toDate
                         }
                     }
-                }, 
+                },
                 {
                     $group:
                     {
@@ -366,7 +358,7 @@ export class DataService {
         });
     }
 
-     public rawData(): Promise<any[]> {
+    public rawData(): Promise<any[]> {
         return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
             var collection = db.collection('snapshots');
 
@@ -395,7 +387,7 @@ export class DataService {
             });
         });
     }
-    
+
     private getUTCSeconds() {
         var currentTime = new Date()
         var UTCseconds = (currentTime.getTime() + currentTime.getTimezoneOffset() * 60 * 1000) / 1000;
@@ -408,13 +400,25 @@ export class DataService {
         return agent.toAgent();
     }
 
-    private distinct(arr: any[], key: string) {
-        var processed = [];
-        for (var i = arr.length - 1; i >= 0; i--) {
-            if (processed.indexOf(arr[i][key]) < 0) {
-                processed.push(arr[i][key]);
-            } else {
-                arr.splice(i, 1);
+    private distinct(arr: any[], key: string = null) {
+
+        if (key == null) {
+            var processed = [];
+            for (var i = arr.length - 1; i >= 0; i--) {
+                if (processed.indexOf(arr[i]) < 0) {
+                    processed.push(arr[i]);
+                } else {
+                    arr.splice(i, 1);
+                }
+            }
+        } else {
+            var processed = [];
+            for (var i = arr.length - 1; i >= 0; i--) {
+                if (processed.indexOf(arr[i][key]) < 0) {
+                    processed.push(arr[i][key]);
+                } else {
+                    arr.splice(i, 1);
+                }
             }
         }
 

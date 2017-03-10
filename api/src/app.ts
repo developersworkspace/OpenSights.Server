@@ -48,7 +48,7 @@ export class WebApi {
 }
 
 import * as mongodb from 'mongodb';
-import { data } from './simpleData';
+import { data } from './sampleData';
 
 if (config.production) {
     let port = 3000;
