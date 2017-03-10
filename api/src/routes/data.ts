@@ -27,4 +27,12 @@ router.post('/get', (req: Request, res: Response, next: Function) => {
     });
 });
 
+router.post('/rawdata', (req: Request, res: Response, next: Function) => {
+    let dataService = new DataService(mongodb.MongoClient);
+
+    dataService.rawData().then((result: any[]) => {
+        res.json(result);
+    });
+});
+
 export = router;

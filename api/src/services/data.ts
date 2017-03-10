@@ -366,6 +366,17 @@ export class DataService {
         });
     }
 
+     public rawData(): Promise<any[]> {
+        return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
+            var collection = db.collection('snapshots');
+
+            return collection.find().toArray().then((result: any[]) => {
+                db.close();
+                return result;
+            });
+        });
+    }
+
     public listHosts() {
         return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
             var collection = db.collection('snapshots');
