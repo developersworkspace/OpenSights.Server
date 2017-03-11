@@ -62,7 +62,7 @@ if (config.production) {
     let database: any;
     mongodb.MongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
         database = db;
-        collection = database.collection('snapshots');
+        collection = database.collection('pageviews');
         return collection.remove({});
     }).then((result: any) => {
         data.forEach(x => {

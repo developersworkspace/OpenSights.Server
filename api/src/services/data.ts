@@ -18,7 +18,7 @@ export class DataService {
         obj['formattedUserAgent'] = this.identifyBrowser(obj['userAgent']);
 
         return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
-            var collection = db.collection('snapshots');
+            var collection = db.collection('pageviews');
             return collection.insertOne(obj).then((result: any) => {
                 db.close();
                 return result;
@@ -38,7 +38,7 @@ export class DataService {
 
     public queryPageViews(host: string, fromDate: number, toDate: number, property: string) {
         return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
-            var collection = db.collection('snapshots');
+            var collection = db.collection('pageviews');
 
             let p: any[] = [
                 {
@@ -85,7 +85,7 @@ export class DataService {
 
     public queryNewUsers(host: string, fromDate: number, toDate: number, property: string) {
         return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
-            var collection = db.collection('snapshots');
+            var collection = db.collection('pageviews');
 
             let p: any[] = [
                 {
@@ -132,7 +132,7 @@ export class DataService {
 
     public queryNewUsersByMinute(host: string, fromDate: number, toDate: number) {
         return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
-            var collection = db.collection('snapshots');
+            var collection = db.collection('pageviews');
 
             let p: any[] = [
                 {
@@ -196,7 +196,7 @@ export class DataService {
 
     public queryNewUsersByHour(host: string, fromDate: number, toDate: number) {
         return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
-            var collection = db.collection('snapshots');
+            var collection = db.collection('pageviews');
 
             let p: any[] = [
                 {
@@ -260,7 +260,7 @@ export class DataService {
 
     public queryUniqueUsers(host: string, fromDate: number, toDate: number, property: string) {
         return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
-            var collection = db.collection('snapshots');
+            var collection = db.collection('pageviews');
 
             let p: any[] = [
                 {
@@ -310,7 +310,7 @@ export class DataService {
 
     public queryAveragePageLoadTime(host: string, fromDate: number, toDate: number, property: string) {
         return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
-            var collection = db.collection('snapshots');
+            var collection = db.collection('pageviews');
 
             let p: any[] = [
                 {
@@ -345,7 +345,7 @@ export class DataService {
 
     public query(query: any): Promise<any[]> {
         return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
-            var collection = db.collection('snapshots');
+            var collection = db.collection('pageviews');
 
             return collection.aggregate([
                 { $match: {} }
@@ -368,7 +368,7 @@ export class DataService {
 
     public listHosts() {
         return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
-            var collection = db.collection('snapshots');
+            var collection = db.collection('pageviews');
             return collection.aggregate([
                 { $match: {} }
                 , {
