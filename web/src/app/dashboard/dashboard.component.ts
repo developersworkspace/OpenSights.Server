@@ -155,19 +155,18 @@ export class DashboardComponent implements OnInit {
   private getData(uri: string) {
 
     let fromDate = new Date();
-    fromDate.setDate(fromDate.getDate() - 2);
+    fromDate.setDate(fromDate.getDate() - 10);
 
     let toDate = new Date();
     toDate.setHours(23, 59, 59, 999);
+    toDate.setDate(toDate.getDate() + 10);
 
-    return this.http.get(environment.apiUri + '/insights/' + uri + '?host=' + this.host + '&fromDate=' + this.getUTCSeconds(fromDate) + '&toDate=' + this.getUTCSeconds(toDate))
+    return this.http.get(environment.apiUri + '/insights/' + uri + '?host=' + this.host + '&fromDate=' + this.getUTCMiliSeconds(fromDate) + '&toDate=' + this.getUTCMiliSeconds(toDate))
       .map((res: Response) => res.json());
   }
 
-  private getUTCSeconds(dateTime) {
-    var UTCseconds = (dateTime.getTime() + dateTime.getTimezoneOffset() * 60 * 1000) / 1000;
-
-    return UTCseconds;
+  private getUTCMiliSeconds(dateTime) {
+    return (dateTime.getTime() + dateTime.getTimezoneOffset() * 60 * 1000);
   }
 
 }

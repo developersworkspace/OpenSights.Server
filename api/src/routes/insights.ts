@@ -4,7 +4,7 @@ let express = require('express');
 import * as mongodb from 'mongodb';
 
 // Imports services
-import { DataService } from './../services/data';
+import { PageViewService } from './../services/pageView';
 
 let router = express.Router();
 
@@ -81,24 +81,24 @@ router.get('/averagepageloadtimebygroupedpath', (req: Request, res: Response, ne
 });
 
 router.get('/hosts', (req: Request, res: Response, next: Function) => {
-    let dataService = new DataService(mongodb.MongoClient);
+    let pageViewService = new PageViewService(mongodb.MongoClient);
 
-    dataService.listHosts().then((result: any[]) => {
+    pageViewService.listHosts().then((result: any[]) => {
         res.json(result);
     });
 });
 
 router.get('/stats', (req: Request, res: Response, next: Function) => {
-    let dataService = new DataService(mongodb.MongoClient);
+    let pageViewService = new PageViewService(mongodb.MongoClient);
 
-    dataService.getDatabaseStats().then((result: any) => {
+    pageViewService.getDatabaseStats().then((result: any) => {
         res.json(result);
     });
 });
 
 function queryPageViews(req: Request, res: Response, property: string, limit: number = null) {
-    let dataService = new DataService(mongodb.MongoClient);
-    return dataService.queryPageViews(req.query.host, parseInt(req.query.fromDate), parseInt(req.query.toDate), property).then((result: any[]) => {
+    let pageViewService = new PageViewService(mongodb.MongoClient);
+    return pageViewService.queryPageViews(req.query.host, parseInt(req.query.fromDate), parseInt(req.query.toDate), property).then((result: any[]) => {
         result = mapResult(result, false);
         result = limitResult(result, limit);
         return result;
@@ -106,8 +106,8 @@ function queryPageViews(req: Request, res: Response, property: string, limit: nu
 }
 
 function queryNewUsersByMinuteWrapper(req: Request, res: Response) {
-    let dataService = new DataService(mongodb.MongoClient);
-    return dataService.queryNewUsersByMinute(req.query.host, parseInt(req.query.fromDate), parseInt(req.query.toDate)).then((result: any[]) => {
+    let pageViewService = new PageViewService(mongodb.MongoClient);
+    return pageViewService.queryNewUsersByMinute(req.query.host, parseInt(req.query.fromDate), parseInt(req.query.toDate)).then((result: any[]) => {
         result = mapResultForTimestamp(result);
         result = sortResultByTimestamp(result);
         result = limitResult(result, 10);
@@ -116,8 +116,8 @@ function queryNewUsersByMinuteWrapper(req: Request, res: Response) {
 }
 
 function queryNewUsersByHourWrapper(req: Request, res: Response) {
-    let dataService = new DataService(mongodb.MongoClient);
-    return dataService.queryNewUsersByHour(req.query.host, parseInt(req.query.fromDate), parseInt(req.query.toDate)).then((result: any[]) => {
+    let pageViewService = new PageViewService(mongodb.MongoClient);
+    return pageViewService.queryNewUsersByHour(req.query.host, parseInt(req.query.fromDate), parseInt(req.query.toDate)).then((result: any[]) => {
         result = mapResultForTimestamp(result);
         result = sortResultByTimestamp(result);
         result = limitResult(result, 12);
@@ -126,8 +126,8 @@ function queryNewUsersByHourWrapper(req: Request, res: Response) {
 }
 
 function queryUniqueUsersWrapper(req: Request, res: Response, property: string, limit: number = null) {
-    let dataService = new DataService(mongodb.MongoClient);
-    return dataService.queryUniqueUsers(req.query.host, parseInt(req.query.fromDate), parseInt(req.query.toDate), property).then((result: any[]) => {
+    let pageViewService = new PageViewService(mongodb.MongoClient);
+    return pageViewService.queryUniqueUsers(req.query.host, parseInt(req.query.fromDate), parseInt(req.query.toDate), property).then((result: any[]) => {
         result = mapResult(result, false);
         result = limitResult(result, limit);
         return result;
@@ -135,8 +135,8 @@ function queryUniqueUsersWrapper(req: Request, res: Response, property: string, 
 }
 
 function queryAveragePageLoadTimeWrapper(req: Request, res: Response, property: string, limit: number = null) {
-    let dataService = new DataService(mongodb.MongoClient);
-    return dataService.queryAveragePageLoadTime(req.query.host, parseInt(req.query.fromDate), parseInt(req.query.toDate), property).then((result: any[]) => {
+    let pageViewService = new PageViewService(mongodb.MongoClient);
+    return pageViewService.queryAveragePageLoadTime(req.query.host, parseInt(req.query.fromDate), parseInt(req.query.toDate), property).then((result: any[]) => {
         result = mapResult(result, true);
         result = limitResult(result, limit);
         return result;

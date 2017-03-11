@@ -7,7 +7,7 @@ import expressWinston = require('express-winston');
 
 
 // Import Routes
-import * as dataRouter from './routes/data';
+import * as pageViewRouter from './routes/pageView';
 import * as insightsRouter from './routes/insights';
 
 // Import middleware
@@ -38,7 +38,7 @@ export class WebApi {
     }
 
     private configureRoutes(app: express.Express) {
-        app.use("/api/data", dataRouter);
+        app.use("/api/pageview", pageViewRouter);
         app.use("/api/insights", insightsRouter);
     }
 
@@ -66,6 +66,17 @@ if (config.production) {
         return collection.remove({});
     }).then((result: any) => {
         data.forEach(x => {
+
+            x['timestamp'] = x['timestamp'] * 1000;
+            let date = new Date(1970, 0, 1);
+            date.setMilliseconds(x['timestamp']);
+            x['day'] = date.getDate();
+            x['month'] = date.getMonth() + 1;
+            x['year'] =date.getFullYear();
+            x['hour'] = date.getHours();
+            x['minute'] = date.getMinutes();
+            x['second'] = date.getSeconds();
+
             return x;
         });
         return collection.insertMany(data);

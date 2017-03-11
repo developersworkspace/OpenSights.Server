@@ -6,14 +6,14 @@ let useragent = require('useragent');
 // Imports configuration
 import { config } from './../config';
 
-export class DataService {
+export class PageViewService {
 
     constructor(private mongoClient: mongodb.MongoClient) {
 
     }
 
-    public save(ipAddress: string, obj: Object): Promise<Boolean> {
-        obj['timestamp'] = this.getUTCSeconds();
+    public savePageView(ipAddress: string, obj: Object): Promise<Boolean> {
+        obj['timestamp'] = this.getUTCMiliSeconds(new Date());
         obj['ipAddress'] = ipAddress;
         obj['formattedUserAgent'] = this.identifyBrowser(obj['userAgent']);
 
@@ -139,27 +139,14 @@ export class DataService {
                     }
                 },
                 {
-                    $project: {
-                        host: "$host",
-                        timestamp: { $multiply: ["$timestamp", 1000] }
-                    }
-                },
-                {
-                    $project: {
-                        host: "$host",
-                        timestampObject: { $add: [new Date(0), "$timestamp"] },
-                        timestamp: "$timestamp"
-                    }
-                },
-                {
                     $group:
                     {
                         _id: {
-                            "hour": { $hour: "$timestampObject" },
-                            "minute": { $minute: "$timestampObject" },
-                            "day": { $dayOfMonth: "$timestampObject" },
-                            "month": { $month: "$timestampObject" },
-                            "year": { $year: "$timestampObject" }
+                            "hour": '$hour',
+                            "minute": '$minute',
+                            "day": '$day',
+                            "month": '$month',
+                            "year": '$year'
                         },
                         count: { $sum: 1 }
                     }
@@ -200,27 +187,14 @@ export class DataService {
                     }
                 },
                 {
-                    $project: {
-                        host: "$host",
-                        timestamp: { $multiply: ["$timestamp", 1000] }
-                    }
-                },
-                {
-                    $project: {
-                        host: "$host",
-                        timestampObject: { $add: [new Date(0), "$timestamp"] },
-                        timestamp: "$timestamp"
-                    }
-                },
-                {
                     $group:
                     {
                         _id: {
-                            "hour": { $hour: "$timestampObject" },
+                            "hour": '$hour',
                             "minute": { $literal: 0 },
-                            "day": { $dayOfMonth: "$timestampObject" },
-                            "month": { $month: "$timestampObject" },
-                            "year": { $year: "$timestampObject" }
+                            "day": '$day',
+                            "month": '$month',
+                            "year": '$year'
                         },
                         count: { $sum: 1 }
                     }
@@ -335,32 +309,9 @@ export class DataService {
         });
     }
 
-    public query(query: any): Promise<any[]> {
-        return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
-            var collection = db.collection('pageviews');
-
-            return collection.aggregate([
-                { $match: {} }
-                , {
-                    $group:
-                    {
-                        _id: query,
-                        list: {
-                            $push: '$$ROOT'
-                        },
-                        count: { $sum: 1 }
-                    }
-                }
-            ]).toArray().then((result: any[]) => {
-                db.close();
-                return result;
-            });
-        });
-    }
-
     public rawData(): Promise<any[]> {
         return this.mongoClient.connect(config.datastores.mongo.uri).then((db: mongodb.Db) => {
-            var collection = db.collection('snapshots');
+            var collection = db.collection('pageviews');
 
             return collection.find().toArray().then((result: any[]) => {
                 db.close();
@@ -388,16 +339,13 @@ export class DataService {
         });
     }
 
-    private getUTCSeconds() {
-        var currentTime = new Date()
-        var UTCseconds = (currentTime.getTime() + currentTime.getTimezoneOffset() * 60 * 1000) / 1000;
-
-        return UTCseconds;
-    }
-
     private identifyBrowser(userAgent) {
         let agent = useragent.parse(userAgent);
         return agent.toAgent();
+    }
+
+    private getUTCMiliSeconds(dateTime) {
+        return (dateTime.getTime() + dateTime.getTimezoneOffset() * 60 * 1000);
     }
 
     private distinct(arr: any[], key: string = null) {
