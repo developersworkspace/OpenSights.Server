@@ -27,23 +27,13 @@ class Agent {
             return null;
         }
     }
-
-    getUsedDiskSpace() {
-        if (this.isWindows()) {
-            return -1;
-        } if (this.isLinux()) {
-            return -1;
-        } else {
-            return null;
-        }
-    }
-
+    
     bytesToHumanReadableString(size: number) {
         let i = Math.floor(Math.log(size) / Math.log(1024));
         return (size / Math.pow(1024, i)) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
     }
 
-    
+
     private isLinux() {
         if (this.osType == 'Linux') {
             return true;
@@ -61,8 +51,8 @@ class Agent {
 
 let agent = new Agent();
 console.log('Running...');
-var j = schedule.scheduleJob('*/1 * * * *', function(){
-  console.log(agent.getFreeMemory());
+var j = schedule.scheduleJob('*/1 * * * *', function () {
+    console.log(agent.getFreeMemory());
 });
 
 
