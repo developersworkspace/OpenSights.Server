@@ -15,7 +15,7 @@ export class BarChartComponent {
   @Input()
   yAxisLabel: string = null;
 
-  private svg: any;
+  private svg: d3.Selection<d3.BaseType, {}, null, undefined>;
   private margin = { top: 20, right: 20, bottom: 100, left: 70 };
   private width = 960 - this.margin.left - this.margin.right;
   private height = 500 - this.margin.top - this.margin.bottom;
@@ -37,8 +37,13 @@ export class BarChartComponent {
 
   ngAfterViewInit() {
 
+    this.initialize();
+
+  }
+
+  private initialize() {
     this.width = this.elementRef.nativeElement.querySelector('div').clientWidth - this.margin.left - this.margin.right;
-    
+
     this.svg = d3.select(this.elementRef.nativeElement).select('svg')
       .attr("width", this.width + this.margin.left + this.margin.right)
       .attr("height", this.height + this.margin.top + this.margin.bottom)
@@ -55,10 +60,9 @@ export class BarChartComponent {
       .text(this.yAxisLabel);
 
     this.draw();
-
   }
 
-  draw() {
+  private draw() {
     if (this.data == null || this.svg == null) {
       return;
     }
@@ -88,7 +92,7 @@ export class BarChartComponent {
       .duration(1000)
       .attr("y", (d) => y(d.value))
       .attr('height', (d) => this.height - y(d.value))
-      
+
 
     this.svg.selectAll('g.axis').remove();
 

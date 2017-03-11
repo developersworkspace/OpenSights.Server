@@ -69,13 +69,13 @@ router.get('/uniqueusersgroupedbylanguage', (req: Request, res: Response, next: 
 });
 
 router.get('/pageviewsgroupedbypath', (req: Request, res: Response, next: Function) => {
-    queryPageViews(req, res, 'path', 5).then(result => {
+    queryPageViews(req, res, 'path', 10).then(result => {
         res.json(result);
     });
 });
 
 router.get('/averagepageloadtimebygroupedpath', (req: Request, res: Response, next: Function) => {
-    queryAveragePageLoadTimeWrapper(req, res, 'path', 5).then(result => {
+    queryAveragePageLoadTimeWrapper(req, res, 'path', 10).then(result => {
         res.json(result);
     });
 });

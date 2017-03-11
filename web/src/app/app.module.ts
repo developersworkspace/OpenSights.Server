@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { BarChartComponent } from './bar-chart/bar-chart.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { BiLineChartComponent } from './bi-line-chart/bi-line-chart.component';
 
 
 
@@ -30,7 +31,8 @@ let router = RouterModule.forRoot([
     AppComponent,
     HomeComponent,
     BarChartComponent,
-    DashboardComponent
+    DashboardComponent,
+    BiLineChartComponent
   ],
   imports: [
     BrowserModule,
