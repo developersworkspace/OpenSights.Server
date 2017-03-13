@@ -42,12 +42,16 @@ class Cleaner {
 let cleaner = new Cleaner(mongodb.MongoClient);
 
 logger.info('Scheduling job');
+
 var j = schedule.scheduleJob('*/1 * * * *', function () {
     logger.info('Clean started');
     cleaner.clean().then(() => {
         logger.info('Clean finished');
-    });
+    }).catch((err: Error) => {
+        logger.error(err.message);
+    })
 });
+
 logger.info('Scheduled job');
 
 

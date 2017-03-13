@@ -36,6 +36,15 @@ npm install
 # Build 'web'
 npm run build
 
+# Change directory to 'cleaner'
+cd ./../cleaner
+
+# Install node packages for 'cleaner'
+npm install
+
+# Build 'cleaner'
+npm run build
+
 # Change to root of repository
 cd ./../
 

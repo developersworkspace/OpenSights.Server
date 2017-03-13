@@ -8,6 +8,12 @@ services:
         - mongo
         volumes:
         - /logs:/logs
+    cleaner:
+        build: cleaner
+        links: 
+        - mongo
+        volumes:
+        - /logs:/logs
     mongo:
         image: "mongo"
         volumes:
