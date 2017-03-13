@@ -9,7 +9,7 @@ let logger = new (winston.Logger)({
     transports: [
       new (winston.transports.Console)({ level: 'debug' }),
       new (winston.transports.File)({
-        filename: path.join(config.logging.path, 'opensights_agent.log'),
+        filename: path.join(config.logging.path, 'opensights_cleaner.log'),
         level: 'debug'
       })
     ]

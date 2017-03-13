@@ -155,11 +155,10 @@ export class DashboardComponent implements OnInit {
   private getData(uri: string) {
 
     let fromDate = new Date();
-    fromDate.setDate(fromDate.getDate() - 10);
+    fromDate.setDate(fromDate.getDate() - 2);
 
     let toDate = new Date();
     toDate.setHours(23, 59, 59, 999);
-    toDate.setDate(toDate.getDate() + 10);
 
     return this.http.get(environment.apiUri + '/insights/' + uri + '?host=' + this.host + '&fromDate=' + this.getUTCMiliSeconds(fromDate) + '&toDate=' + this.getUTCMiliSeconds(toDate))
       .map((res: Response) => res.json());
