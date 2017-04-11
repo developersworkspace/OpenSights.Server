@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<script type="text/javascript" src="index.js"></script>
+
+<body>
+
+    <p id="test"></p>
+
+    <script>
+        (function () {
+            setTimeout(() => {
+                let data = getData();
+                console.log(JSON.stringify(data, null, 2));
+                document.getElementById("test").innerHTML = JSON.stringify(data);
+            }, 500)
+        })();
+    </script>
+
+</body>
+
+</html>
